@@ -251,7 +251,7 @@ public class RecoveryNotifier : MonoBehaviour
     [Tooltip("Optional camera to use for gaze checks. If null, Camera.main will be used.")]
     public Camera gazeCamera;
 
-    // internal state for dwell timer
+    // estado interno del temporizador de permanencia
     float _gazeTimer = 0f;
     float _lastNotifyTime = -10f;
     [Tooltip("Cooldown after a notification (seconds) to avoid double triggers")]
@@ -259,7 +259,7 @@ public class RecoveryNotifier : MonoBehaviour
 
     void Reset()
     {
-        // sensible defaults
+        // valores predeterminados
         useRaycastFallback = true;
         gazeMaxDistance = 100f;
         dwellTime = 0.5f;
@@ -273,7 +273,7 @@ public class RecoveryNotifier : MonoBehaviour
 
     void Update()
     {
-        // If recently notified, respect cooldown
+        // Si se le ha notificado recientemente, se añade un período de espera.
         if (Time.time - _lastNotifyTime < notifyCooldown) return;
 
         if (!useRaycastFallback) return;
@@ -283,7 +283,7 @@ public class RecoveryNotifier : MonoBehaviour
             gazeCamera = Camera.main;
             if (gazeCamera == null) return;
         }
-        // Raycast from camera forward (center reticle). If it hits this object's collider (or a child), start dwell.
+        // Lanzamiento de rayo desde la cámara hacia adelante (punto del centro de la pantalla). Si impacta el colisionador de este objeto (o un hijo), inicia el tiempo de permanencia.
         Vector3 camPos = gazeCamera.transform.position;
         Vector3 camForward = gazeCamera.transform.forward;
 
@@ -298,7 +298,7 @@ public class RecoveryNotifier : MonoBehaviour
         {
             if (hit.collider != null)
             {
-                // Consider it a hit if the hit transform is this transform or a child of it
+                // Considérese un acierto si el transform impactado es este transform o un derivado de el.
                 if (hit.collider.transform == transform || hit.collider.transform.IsChildOf(transform))
                 {
                     hitThis = true;
@@ -322,7 +322,7 @@ public class RecoveryNotifier : MonoBehaviour
     }
 
     /// <summary>
-    /// Called by the gaze system (reticle) when the object is looked at.
+    /// Activado por el sistema de mirada (retícula) cuando se observa el objeto.
     /// </summary>
     public void OnPointerEnter()
     {
