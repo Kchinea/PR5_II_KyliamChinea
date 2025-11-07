@@ -18,17 +18,13 @@ A la hora de realizar esta practica comence desde el tutorial que se realizó en
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Collider))]
 public class CollectibleController : MonoBehaviour
 {
-    [Tooltip("Distancia máxima para poder recoger con la mirada")]
     public float collectDistance = 40f;
-
-    [Tooltip("Tag del objeto notificador de recuperación")]
     public string notifierTag = "Recovery Object";
 
-    [HideInInspector] public Vector3 originalPosition;
-    [HideInInspector] public Quaternion originalRotation;
+    public Vector3 originalPosition;
+    public Quaternion originalRotation;
 
     private GameObject notifierObject;
     private RecoveryNotifier notifier;
@@ -145,32 +141,24 @@ using UnityEngine;
 
 public class RecoveryMover : MonoBehaviour
 {
-    [Header("Referencias")]
     public Transform notifierTransform;
     public string playerTag = "Player";
-
-    [Header("Movimiento")]
     public float speed = 8f;
     public float stopDistance = 2f;
     public float arriveDistance = 0.5f;
-
-    [Header("Saltos")]
     public float jumpHeight = 0.8f;
     public float jumpSpeed = 3f;
-
     private Transform player;
     private Rigidbody rb;
     private bool arrived = false;
     private Vector3 jumpBasePosition;
     private float jumpOffset;
-
     void Start()
     {
         player = GameObject.FindWithTag(playerTag)?.transform;
         rb = GetComponent<Rigidbody>();
         jumpOffset = Random.Range(0f, Mathf.PI * 2f);
     }
-
     void OnEnable()
     {
         arrived = false;
@@ -178,7 +166,6 @@ public class RecoveryMover : MonoBehaviour
             player = GameObject.FindWithTag(playerTag)?.transform;
         jumpOffset = Random.Range(0f, Mathf.PI * 2f);
     }
-
     void Update()
     {
         if (player == null)
@@ -231,30 +218,16 @@ public class RecoveryNotifier : MonoBehaviour
     // Delegate y evento para notificar a los collectibles
     public delegate void RecoverDelegate();
     public event RecoverDelegate OnPlayerGaze;
-
-    [Header("Fallback gaze detection (raycast to collider)")]
-    [Tooltip("Enable fallback gaze detection using a Physics.Raycast from the camera center to hit this object's collider.")]
     public bool useRaycastFallback = true;
-
-    [Tooltip("Maximum distance (meters) for the fallback gaze raycast")]
     public float gazeMaxDistance = 100f;
-
-    [Tooltip("Time (seconds) the player must hold gaze to trigger recovery when using fallback")]
     public float dwellTime = 0.5f;
-
-    [Tooltip("Layer mask used by the fallback raycast. Use this to limit which colliders are considered.")]
     public LayerMask gazeLayerMask = ~0;
-
-    [Tooltip("If true, draw the debug ray in the Scene view/Game view (Gizmos) while checking gaze")]
     public bool debugDrawRay = false;
-
-    [Tooltip("Optional camera to use for gaze checks. If null, Camera.main will be used.")]
     public Camera gazeCamera;
 
     // estado interno del temporizador de permanencia
     float _gazeTimer = 0f;
     float _lastNotifyTime = -10f;
-    [Tooltip("Cooldown after a notification (seconds) to avoid double triggers")]
     public float notifyCooldown = 0.5f;
 
     void Reset()
